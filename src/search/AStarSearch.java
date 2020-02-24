@@ -3,7 +3,7 @@
 // a Graph object and ... The method returns ...
 // ******************************************************************************************
 
-package searches;
+package search;
 
 import graph.Graph;
 
