@@ -18,11 +18,11 @@ public class UniformCostSearch {
 	public static UCSNode[] runSearch(Graph graph, int start, int goal) {
 		
 		UCSNode[] result = null; // Result array of nodes set to null as default.
-		UCSNode[] nodes = new UCSNode[graph.getNumberOfVertices()]; // Keeps track of the state of all nodes during the algorithm.
+		UCSNode[] nodes = new UCSNode[graph.getNumberOfNodes()]; // Keeps track of the state of all nodes during the algorithm.
 		PriorityQueue<UCSNode> frontier = new PriorityQueue<UCSNode>(); // Keeps track of nodes in the frontier ordered by cost.
 		
 		// Initialize the nodes with default values.
-		for(int i = 0; i < graph.getNumberOfVertices(); i++)
+		for(int i = 0; i < graph.getNumberOfNodes(); i++)
 			nodes[i] = new UCSNode(i, Integer.MAX_VALUE, -1, false);
 		
 		// Initialize the starting node and add it to the frontier.
@@ -44,17 +44,17 @@ public class UniformCostSearch {
 			
 			// If node u is not the goal node, iterate through it's possible neighbors and add qualified nodes to the frontier.
 			else {
-				for(int v = 0; v < graph.getNumberOfVertices(); v++) {
+				for(int v = 0; v < graph.getNumberOfNodes(); v++) {
 					// If node u shares an edge with node v, node v is not in the frontier, and node v is unexplored, add it to the frontier.
 					if(graph.getAdjacencyMatrix()[u.id][v] > 0 && !nodeIsInFrontier(v,frontier) && nodes[v].explored == false) {
-						nodes[v] = new UCSNode(v, graph.getAdjacencyMatrix()[u.id][v] + u.distance, u.id, false);
+						nodes[v] = new UCSNode(v, graph.getAdjacencyMatrix()[u.id][v] + u.cost, u.id, false);
 						frontier.add(nodes[v]);
 					}
 					
 					// If node u shares an edge with node v, node v is in the frontier, and the cost of node v in the frontier is not optimal, update node v with a more optimal cost.
-					else if(graph.getAdjacencyMatrix()[u.id][v] > 0 && nodeIsInFrontier(v,frontier) && getCostFromFrontier(v,frontier) > graph.getAdjacencyMatrix()[u.id][v] + u.distance) {
+					else if(graph.getAdjacencyMatrix()[u.id][v] > 0 && nodeIsInFrontier(v,frontier) && getCostFromFrontier(v,frontier) > graph.getAdjacencyMatrix()[u.id][v] + u.cost) {
 						frontier.remove(nodes[v]);
-						nodes[v] = new UCSNode(v, graph.getAdjacencyMatrix()[u.id][v] + u.distance, u.id, false);
+						nodes[v] = new UCSNode(v, graph.getAdjacencyMatrix()[u.id][v] + u.cost, u.id, false);
 						frontier.add(nodes[v]);
 					}
 				}
@@ -100,7 +100,7 @@ public class UniformCostSearch {
 		while(iterator.hasNext()) {
 			UCSNode temp = iterator.next();
 			if(temp.id == index) {
-				result = temp.distance;
+				result = temp.cost;
 			}
 		}
 		return result;

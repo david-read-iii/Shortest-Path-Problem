@@ -1,31 +1,37 @@
-// ******************************************************************************************
-// This class represents a graph with an adjacency matrix. Methods are available to get or
-// set the adjacency matrix and get the number of vertices in the graph.
-// ******************************************************************************************
-
 package graph;
 
 public class Graph {
 	
 	private int[][] adjacencyMatrix;
-	private int numberOfVertices;
+	private int numberOfNodes;
 	
+	/**
+	 * Represents a graph with nodes and edges with a given adjacency matrix.
+	 *  @adjacencyMatrix The adjacency matrix of the graph.
+	 *  @numberOfNodes The number of nodes that are in this graph.*/
 	public Graph(int[][] adjacencyMatrix) {
 		this.setAdjacencyMatrix(adjacencyMatrix);
-		numberOfVertices = adjacencyMatrix.length;
+		numberOfNodes = adjacencyMatrix.length;
 	}
 
+	/**
+	 *  @return Returns the adjacency matrix of the graph.*/
 	public int[][] getAdjacencyMatrix() {
 		return adjacencyMatrix;
 	}
 
+	/**
+	 * Sets the adjacency matrix of this graph to a new given adjacency matrix.
+	 *  @adjacencyMatrix The adjacency matrix of the graph.*/
 	public void setAdjacencyMatrix(int[][] adjacencyMatrix) {
 		this.adjacencyMatrix = adjacencyMatrix;
-		numberOfVertices = adjacencyMatrix.length;
+		numberOfNodes = adjacencyMatrix.length;
 	}
 
-	public int getNumberOfVertices() {
-		return numberOfVertices;
+	/**
+	 *  @return Returns the number of nodes in the graph.*/
+	public int getNumberOfNodes() {
+		return numberOfNodes;
 	}
 
 }

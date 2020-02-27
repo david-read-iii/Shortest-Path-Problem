@@ -52,7 +52,7 @@ public class TestMainUCS {
 		} else {
 			System.out.println("ID:\t" + "Cost:\t" + "Parent:\t" + "Explored?\t");
 			for(int i = 0; i < nodes1.length; i++) {
-				System.out.println(nodes1[i].id + "\t" + nodes1[i].distance + "\t" + nodes1[i].parent + "\t" + nodes1[i].explored);
+				System.out.println(nodes1[i].id + "\t" + nodes1[i].cost + "\t" + nodes1[i].parent + "\t" + nodes1[i].explored);
 			}
 		}
 		
@@ -64,7 +64,7 @@ public class TestMainUCS {
 		} else {
 			System.out.println("ID:\t" + "Cost:\t" + "Parent:\t" + "Explored?\t");
 			for(int i = 0; i < nodes2.length; i++) {
-				System.out.println(nodes2[i].id + "\t" + nodes2[i].distance + "\t" + nodes2[i].parent + "\t" + nodes2[i].explored);
+				System.out.println(nodes2[i].id + "\t" + nodes2[i].cost + "\t" + nodes2[i].parent + "\t" + nodes2[i].explored);
 			}
 		}
 		
@@ -76,7 +76,7 @@ public class TestMainUCS {
 		} else {
 			System.out.println("ID:\t" + "Cost:\t" + "Parent:\t" + "Explored?\t");
 			for(int i = 0; i < nodes3.length; i++) {
-				System.out.println(nodes3[i].id + "\t" + nodes3[i].distance + "\t" + nodes3[i].parent + "\t" + nodes3[i].explored);
+				System.out.println(nodes3[i].id + "\t" + nodes3[i].cost + "\t" + nodes3[i].parent + "\t" + nodes3[i].explored);
 			}
 		}
 	}

@@ -2,25 +2,27 @@ package node;
 
 public class UCSNode implements Comparable<UCSNode> {
     public int id;
-    public int distance;
+    public int cost;
     public int parent;
     public boolean explored;
 
-    public UCSNode(int id, int distance, int parent, boolean explored) {
+	/**
+	 * Represents a node in the uniform cost search algorithm.
+	 *  @id The index of the node.
+	 *  @cost The cost of the node.
+	 *  @parent The parent of the node.
+	 *  @explored Whether the node has been explored during the algorithm.*/
+    public UCSNode(int id, int cost, int parent, boolean explored) {
         this.id = id;
-        this.distance = distance;
+        this.cost = cost;
         this.parent = parent;
         this.explored = explored;
     }
 
+	/**
+	 * Compares two nodes by their costs.
+	 *  @o The second node that will be compared with this node.*/
     public int compareTo(UCSNode o) {
-        return (this.distance - o.distance);
-    }
-    
-    public boolean equals(UCSNode o) {
-    	Boolean result = false;
-    	if(id == o.id && distance == o.distance && parent == o.parent && explored == o.explored)
-    		result = true;
-		return result;
+        return (this.cost - o.cost);
     }
 }

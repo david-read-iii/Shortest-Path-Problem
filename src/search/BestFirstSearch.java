@@ -8,11 +8,11 @@ import graph.Graph;
 public class BestFirstSearch {
 	
     public static String runSearch(Graph graph, int start, int goal) {
-        int[] parent = new int[graph.getNumberOfVertices()];
-        boolean[] expanded = new boolean[graph.getNumberOfVertices()];
+        int[] parent = new int[graph.getNumberOfNodes()];
+        boolean[] expanded = new boolean[graph.getNumberOfNodes()];
 
         int[][] A = graph.getAdjacencyMatrix();
-        for (int i = 0; i<graph.getNumberOfVertices(); i++)
+        for (int i = 0; i<graph.getNumberOfNodes(); i++)
         {
             parent[i] = 0;
         }
@@ -33,7 +33,7 @@ public class BestFirstSearch {
             }
             else
             {
-                for(int v = 0; v < graph.getNumberOfVertices(); v++)
+                for(int v = 0; v < graph.getNumberOfNodes(); v++)
                 {
                     if (A[u][v] != 0 && expanded[v] == false)
                     {
