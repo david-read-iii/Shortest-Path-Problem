@@ -3,9 +3,10 @@ package main;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-imprt graph.Graph;
-import node.Node;
-import search.BestFirstSearch;
+import graph.Graph;
+import node.GBFSNode;
+import node.UCSNode;
+import search.GreedyBestFirstSearch;
 import search.UniformCostSearch;
 
 public class Main {
@@ -18,31 +19,28 @@ public class Main {
 
         // Create graph object.
         int[][] A =
-                {
-                        {0, 4, 2, 3, 0, 0, 0, 0, 0},
-                        {4, 0, 0, 0, 0, 7, 0, 9, 0},
-                        {2, 0, 0, 0, 0, 2, 6, 0, 7},
-                        {3, 0, 0, 0, 0, 0, 2, 0, 0},
-                        {0, 0, 0, 0, 0, 6, 0, 5, 0},
-                        {0, 7, 2, 0, 6, 0, 8, 0, 0},
-                        {0, 0, 6, 2, 0, 8, 0, 0, 3},
-                        {0, 9, 0, 0, 5, 0, 0, 0, 12},
-                        {0, 0, 7, 0, 0, 0, 3, 12, 0}};
+                {{0, 4, 2, 3, 0, 0, 0, 0, 0},
+                {4, 0, 0, 0, 0, 7, 0, 9, 0},
+                {2, 0, 0, 0, 0, 2, 6, 0, 7},
+                {3, 0, 0, 0, 0, 0, 2, 0, 0},
+                {0, 0, 0, 0, 0, 6, 0, 5, 0},
+                {0, 7, 2, 0, 6, 0, 8, 0, 0},
+                {0, 0, 6, 2, 0, 8, 0, 0, 3},
+                {0, 9, 0, 0, 5, 0, 0, 0, 12},
+                {0, 0, 7, 0, 0, 0, 3, 12, 0}};
         Graph graph = new Graph(A);
 
-        /*These are all of the heuristic sets depending on the goal node.
-        A different set will be applied depending on the goal
-        the numbers of the variables H0 - H8 correspond to their goal states
-        Note that these heuristic values ARE specific to the graph declared above*/
-        final int[] H0 = {0, 3, 1, 2, 10, 7, 6, 9, 8};
-        final int[] H1 = {1, 0, 4, 5, 7, 4, 6, 8, 10};
-        final int[] H2 = {1, 5, 0, 3, 6, 1, 2, 7, 10};
-        final int[] H3 = {2, 4, 4, 0, 10, 5, 1, 10, 6};
-        final int[] H4 = {10, 8, 6, 9, 0, 3, 5, 1, 7};
-        final int[] H5 = {3, 4, 1, 5, 4, 0, 6, 8, 6};
-        final int[] H6 = {3, 5, 4, 1, 8, 7, 0, 6, 2};
-        final int[] H7 = {6, 4, 8, 10, 1, 4, 6, 0, 5};
-        final int[] H8 = {5, 7, 6, 3, 10, 7, 1, 6, 0};
+        // The matrix containing the heuristic sets for the above graph. Used in the greedy best first search algorithm.
+        int[][] H =
+                {{0, 3, 1, 2, 10, 7, 6, 9, 8},
+                {1, 0, 4, 5, 7, 4, 6, 8, 10},
+                {1, 5, 0, 3, 6, 1, 2, 7, 10},
+                {2, 4, 4, 0, 10, 5, 1, 10, 6},
+                {10, 8, 6, 9, 0, 3, 5, 1, 7},
+                {3, 4, 1, 5, 4, 0, 6, 8, 6},
+                {3, 5, 4, 1, 8, 7, 0, 6, 2},
+                {6, 4, 8, 10, 1, 4, 6, 0, 5},
+                {5, 7, 6, 3, 10, 7, 1, 6, 0}};
 
         // Create scanner object.
         Scanner scan = new Scanner(System.in);
@@ -73,38 +71,15 @@ public class Main {
 
         try {
 
-            // Use the user's favorite search algorithm to find the shortest path from their origin city to their destination city.
             ArrayList<GBFSNode> GBFSresult = null;
-            ArrayList<Node> UCSresult = null;
+            ArrayList<UCSNode> UCSresult = null;
 
+            // Use the greedy best first search algorithm to find the shortest path from origin to destination city.
             if(algorithm == 0) {
-                int[] heuristic = new int[graph.getNumberOfNodes()];
 
-                //Pass heuristics to the runSeach method depending on the destination city//
-                switch (destination)
-                {
-                    case 0: heuristic = H0;
-                        break;
-                    case 1: heuristic = H1;
-                        break;
-                    case 2: heuristic = H2;
-                        break;
-                    case 3: heuristic = H3;
-                        break;
-                    case 4: heuristic = H4;
-                        break;
-                    case 5: heuristic = H5;
-                        break;
-                    case 6: heuristic = H6;
-                        break;
-                    case 7: heuristic = H7;
-                        break;
-                    case 8: heuristic = H8;
-                        break;
-                }
-                GBFSresult = BestFirstSearch.runSearch(graph, origin, destination, heuristic);
+                GBFSresult = GreedyBestFirstSearch.runSearch(graph, origin, destination, H[destination]);
 
-                //print solution path//
+                // Print solution path.
                 System.out.print("Path: [");
                 for(int i = 0; i < GBFSresult.size(); i++) {
                     System.out.print(GBFSresult.get(i).id);
@@ -118,7 +93,10 @@ public class Main {
                 // Print solution cost.
                 System.out.println("Cost: " + GBFSresult.get(GBFSresult.size() - 1).cost);
             }
+
+            // Use the uniform cost search algorithm to find the shortest path from origin to destination city.
             else if(algorithm == 1) {
+
                 UCSresult = UniformCostSearch.runSearch(graph, origin, destination);
 
                 // Print solution path.
@@ -131,6 +109,7 @@ public class Main {
                         System.out.println("]");
                     }
                 }
+
                 // Print solution cost.
                 System.out.println("Cost: " + UCSresult.get(UCSresult.size() - 1).cost);
             }

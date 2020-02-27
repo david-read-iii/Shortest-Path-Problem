@@ -1,6 +1,7 @@
 package node;
 
-public class Node implements Comparable<Node> {
+public class UCSNode implements Comparable<UCSNode> {
+
     public int id;
     public int cost;
     public int parent;
@@ -10,7 +11,7 @@ public class Node implements Comparable<Node> {
 	 * @param id The index of the node.
 	 * @param cost The cost of the node.
 	 * @param parent The parent of the node.*/
-    public Node(int id, int cost, int parent) {
+    public UCSNode(int id, int cost, int parent) {
         this.id = id;
         this.cost = cost;
         this.parent = parent;
@@ -19,7 +20,7 @@ public class Node implements Comparable<Node> {
 	/**
 	 * Compares two nodes by their costs.
 	 * @param o The second node that will be compared with this node.*/
-    public int compareTo(Node o) {
+    public int compareTo(UCSNode o) {
         return (this.cost - o.cost);
     }
 }
