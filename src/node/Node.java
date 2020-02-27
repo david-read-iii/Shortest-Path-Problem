@@ -7,9 +7,9 @@ public class Node implements Comparable<Node> {
 
 	/**
 	 * Represents a node in the uniform cost search algorithm.
-	 *  @id The index of the node.
-	 *  @cost The cost of the node.
-	 *  @parent The parent of the node.*/
+	 * @param id The index of the node.
+	 * @param cost The cost of the node.
+	 * @param parent The parent of the node.*/
     public Node(int id, int cost, int parent) {
         this.id = id;
         this.cost = cost;
@@ -18,7 +18,7 @@ public class Node implements Comparable<Node> {
 
 	/**
 	 * Compares two nodes by their costs.
-	 *  @o The second node that will be compared with this node.*/
+	 * @param o The second node that will be compared with this node.*/
     public int compareTo(Node o) {
         return (this.cost - o.cost);
     }

@@ -11,9 +11,9 @@ import search.UniformCostSearch;
 public class Main {
 
 	/**
-	 * Creates an example graph object and asks the user to pick an start node, goal node and choice 
-	 * of search algorithm. Then, the user's choice of search algorithm is executed and returns the
-	 * appropriate path to the goal node and cost to get from start to finish.*/
+	 * Creates an example graph object and asks the user to pick an start node, goal node and choice of search
+	 * algorithm. Then, the user's choice of search algorithm is executed and returns the appropriate path to the goal
+	 * node and cost to get from start to finish.*/
 	public static void main(String[] args) {
 		
 		// Create graph object.
@@ -62,12 +62,13 @@ public class Main {
 			ArrayList<Node> result = null;
 
 			if(algorithm == 0) {
-				/** TODO: Call the static method runSearch from the BestFirstSearch class. The inputs of this class should be a Graph
-				 * object, an int containing the index of the start node, and an int containing the index of the goal node. The output
-				 * of this class should be an ArrayList of Node objects, where the Node objects are in path order. Node objects not in
-				 * the final path should not be in the ArrayList. So, the first Node object in the ArrayList will be the start node,
-				 * the second Node object will be the node who has the start node as a parent, the third Node object will be the node
-				 * who has the second node as a parent, ..., the last Node object will be the goal node. */
+				/* TODO: Call the static method runSearch from the BestFirstSearch class. The inputs of this class
+				 *  should be a Graph object, an int containing the index of the start node, and an int containing the
+				 *  index of the goal node. The output of this class should be an ArrayList of Node objects, where the
+				 *  Node objects are in path order. Node objects not in the final path should not be in the ArrayList.
+				 *  So, the first Node object in the ArrayList will be the start node the second Node object will be
+				 *  the node who has the start node as a parent, the third Node object will be the node who has the
+				 *  second node as a parent, ..., the last Node object will be the goal node. */
 				
 				// result = BestFirstSearch.runSearch(graph, origin, destination);
 			} else if(algorithm == 1) {
