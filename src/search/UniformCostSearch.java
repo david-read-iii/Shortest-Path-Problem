@@ -1,10 +1,12 @@
 package search;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.PriorityQueue;
 
 import graph.Graph;
-import node.UCSNode;
+import node.Node;
 
 public class UniformCostSearch {
 
@@ -13,32 +15,35 @@ public class UniformCostSearch {
 	 *  @graph A graph object initialized with an adjacency matrix.
 	 *  @start The index of the start node.
 	 *  @goal The index of the goal node.
-	 *  @return Returns null if the search fails. Returns an array of UCSNodes with
-	 *  optimal cost and parent attributes as determined by the search algorithm.*/
-	public static UCSNode[] runSearch(Graph graph, int start, int goal) {
+	 *  @return Returns null if the search fails. Returns an ordered ArrayList of nodes that
+	 *  are in path order.*/
+	public static ArrayList<Node> runSearch(Graph graph, int start, int goal) {
 		
-		UCSNode[] result = null; // Result array of nodes set to null as default.
-		UCSNode[] nodes = new UCSNode[graph.getNumberOfNodes()]; // Keeps track of the state of all nodes during the algorithm.
-		PriorityQueue<UCSNode> frontier = new PriorityQueue<UCSNode>(); // Keeps track of nodes in the frontier ordered by cost.
+		ArrayList<Node> result = null; // Result ArrayList of nodes set to null as default.
+		Node[] nodes = new Node[graph.getNumberOfNodes()]; // Keeps track of the cost and parent of each node.
+		boolean[] explored = new boolean[graph.getNumberOfNodes()]; // Keeps track of the exploration status of each node.
+		PriorityQueue<Node> frontier = new PriorityQueue<Node>(); // Keeps track of nodes in the frontier ordered by cost.
 		
 		// Initialize the nodes with default values.
-		for(int i = 0; i < graph.getNumberOfNodes(); i++)
-			nodes[i] = new UCSNode(i, Integer.MAX_VALUE, -1, false);
+		for(int i = 0; i < graph.getNumberOfNodes(); i++) {
+			nodes[i] = new Node(i, Integer.MAX_VALUE, -1);
+			explored[i] = false;
+		}
 		
 		// Initialize the starting node and add it to the frontier.
-		nodes[start] = new UCSNode(start, 0 , -1, false);		
+		nodes[start] = new Node(start, 0 , -1);		
 		frontier.add(nodes[start]);
 		
 		// Repeat these steps while there are still elements in the queue.
 		while(!frontier.isEmpty()) {
 			
 			// Poll the node with the lowest cost from the frontier.
-			UCSNode u = frontier.poll();
-			nodes[u.id].explored = true;
+			Node u = frontier.poll();
+			explored[u.id] = true;
 			
 			// If node u is the goal node, set the result array to the array of nodes with optimal costs and parents. Also, clear the frontier so the loop breaks.
 			if(u.id == goal) {
-				result = nodes;
+				result = generateSolutionArrayList(nodes, goal);
 				frontier.clear();
 			}
 			
@@ -46,15 +51,15 @@ public class UniformCostSearch {
 			else {
 				for(int v = 0; v < graph.getNumberOfNodes(); v++) {
 					// If node u shares an edge with node v, node v is not in the frontier, and node v is unexplored, add it to the frontier.
-					if(graph.getAdjacencyMatrix()[u.id][v] > 0 && !nodeIsInFrontier(v,frontier) && nodes[v].explored == false) {
-						nodes[v] = new UCSNode(v, graph.getAdjacencyMatrix()[u.id][v] + u.cost, u.id, false);
+					if(graph.getAdjacencyMatrix()[u.id][v] > 0 && !nodeIsInFrontier(v,frontier) && explored[v] == false) {
+						nodes[v] = new Node(v, graph.getAdjacencyMatrix()[u.id][v] + u.cost, u.id);
 						frontier.add(nodes[v]);
 					}
 					
 					// If node u shares an edge with node v, node v is in the frontier, and the cost of node v in the frontier is not optimal, update node v with a more optimal cost.
 					else if(graph.getAdjacencyMatrix()[u.id][v] > 0 && nodeIsInFrontier(v,frontier) && getCostFromFrontier(v,frontier) > graph.getAdjacencyMatrix()[u.id][v] + u.cost) {
 						frontier.remove(nodes[v]);
-						nodes[v] = new UCSNode(v, graph.getAdjacencyMatrix()[u.id][v] + u.cost, u.id, false);
+						nodes[v] = new Node(v, graph.getAdjacencyMatrix()[u.id][v] + u.cost, u.id);
 						frontier.add(nodes[v]);
 					}
 				}
@@ -71,13 +76,13 @@ public class UniformCostSearch {
 	 *  @return Returns false if a node with the given index is not contained within
 	 *  the given priority queue. Returns true if a node with the given index is
 	 *  contained within the given priority queue.*/
-	private static boolean nodeIsInFrontier(int index, PriorityQueue<UCSNode> queue) {
+	private static boolean nodeIsInFrontier(int index, PriorityQueue<Node> queue) {
 		
 		boolean result = false;
 		
-		Iterator<UCSNode> iterator = queue.iterator();
+		Iterator<Node> iterator = queue.iterator();
 		while(iterator.hasNext()) {
-			UCSNode temp = iterator.next();
+			Node temp = iterator.next();
 			if(temp.id == index) {
 				result = true;
 			}
@@ -92,17 +97,41 @@ public class UniformCostSearch {
 	 *  @queue The priority queue object.
 	 *  @return Returns a cost attribute. Will return -1 if the node is not contained
 	 *  within the priority queue.*/
-	private static int getCostFromFrontier(int index, PriorityQueue<UCSNode> queue) {
+	private static int getCostFromFrontier(int index, PriorityQueue<Node> queue) {
 		
 		int result = -1;
 		
-		Iterator<UCSNode> iterator = queue.iterator();
+		Iterator<Node> iterator = queue.iterator();
 		while(iterator.hasNext()) {
-			UCSNode temp = iterator.next();
+			Node temp = iterator.next();
 			if(temp.id == index) {
 				result = temp.cost;
 			}
 		}
+		return result;
+	}
+	
+	/**
+	 * Generates the ArrayList that will be returned by the runSearch() method.
+	 *  @solutionState A Node object array of the solution state of the algorithm.
+	 *  @goal The index of the goal node.*/
+	private static ArrayList<Node> generateSolutionArrayList(Node[] solutionState, int goal) {
+		
+		ArrayList<Node> result = new ArrayList<Node>();
+
+		// Use the node's parent attribute to traceback through the parents. Start at the goal node.
+		Node current = solutionState[goal];
+		
+		do {
+			result.add(current);
+			current = solutionState[current.parent];
+		} while(current.parent != -1);
+		
+		result.add(current);
+		
+		// Reverse the ArrayList so the starting node is followed by subsequent nodes ending with the goal node.
+		Collections.reverse(result);
+		
 		return result;
 	}
 }
